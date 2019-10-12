@@ -48,18 +48,21 @@ public class LinkedList
    {
       if (index == 0) //if no index values then next is firstElement
       {
-         firstElement = firstElement.next;
+         firstElement = firstElement.getNext();
       } 
       else // sets the next current value and removes current one
       {
          KeyedElement current = firstElement;
          for(int i = 0; i < index - 1; i++) 
          {
-            current = current.next;
+            current = current.getNext();
          }
-         current.next = current.next.next;
+         KeyedElement mycurrent = firstElement;
+         current.setNext(current.getNext().getNext());
+
       }   	
    }
+   
    //returns the element at the specific index value thats passed
    public int get(int index)
 	{
@@ -72,7 +75,7 @@ public class LinkedList
 		{
 			if(current.getNext()==null)
 				return -1;
-			current=current.next;
+			current=current.getNext();
 		}
 		return current.getPayload();
 	}
@@ -84,12 +87,12 @@ public class LinkedList
       //runs while the first element is not null
       while (current != null) 
       {
-         if (current.payLoad.equals(myindex))//returns index location once value is found 
+         if (current.isKey(myindex) == true)//returns index location once value is found 
          {
             return index;
          }
          index++;//cycles through index
-         current = current.next;//sets the current value
+         current = current.getNext();//sets the current value
       }
       return -1;
    }
@@ -130,26 +133,31 @@ public class LinkedList
 
                if ( previous != null ) //if prev. is not null then set next
                {
-                  KeyedElement sig = next.next;//will get the next element after next
-                  previous.next = next;//shifts previous forward
-                  next.next = current;//shifts currents
-                  current.next = sig;//shifts current forward
+                  KeyedElement sig = next.getNext();//will get the next element after next
+                  previous.setNext(next);
+                  //previous.next = next;//shifts previous forward
+                  //next.next = current;//shifts currents
+                  next.setNext(current);
+                  //current.next = sig;//shifts current forward
+                  current.setNext(sig);
                 } 
                 else 
                 {
-                  KeyedElement sig = next.next;
+                  KeyedElement sig = next.getNext();
                   firstElement = next;//changes so the next element is first
-                  next.next = current;//current is now next
-                  current.next = sig;
+                  //next.next = current;//current is now next
+                  next.setNext(current);
+                  //current.next = sig;
+                  current.setNext(sig);
                 }
                   previous = next;
-                  next = current.next;
+                  next = current.getNext();
               } 
               else
               { 
                previous = current;//prev is now current
                current = next;//shifts forward the current
-               next = next.next;    
+               next = next.getNext();    
                }
               } 
             } while( wasChanged );
@@ -164,13 +172,13 @@ public class LinkedList
       else 
       {
          //prints the "key" and the coresponding "payLoad" in linked list
-         String result = "[" + firstElement.key + "-" + firstElement.payLoad;
-         KeyedElement e = firstElement.next;
+         String result = "[" + firstElement.getKey() + "-" + firstElement.getPayload();
+         KeyedElement e = firstElement.getNext();
          //cycles through list to print result of both "key" and "payLoad"
          while (e != null) 
          {
-            result += ", " + e.key + "-" + e.payLoad;
-            e = e.next;  
+            result += ", " + e.getKey() + "-" + e.getPayload();
+            e = e.getNext();  
          }
          result += "]";
          return result;
